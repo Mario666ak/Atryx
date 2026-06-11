@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>ATRYX &mdash; Members Only</title>
+<meta name="description" content="ATRYX is an invitation-only circle. Request access to join the waitlist." />
+<meta property="og:title" content="ATRYX &mdash; Members Only" />
+<meta property="og:description" content="An invitation-only circle. Join the waitlist." />
+<meta property="og:type" content="website" />
+<meta name="theme-color" content="#060002" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet" />
+<style>
+  /* ─── ATRYX palette (dark / oxblood) ─── */
+  :root {
+    --bg:            #060002;
+    --bg-elevated:   #0a0306;
+    --red:           #c0202a;
+    --red-bright:    #e04050;
+    --pure:          #ffffff;
+    --white:         #f0ece8;
+    --white-mid:     rgba(240,236,232,0.60);
+    --white-dim:     rgba(240,236,232,0.30);
+    --white-faint:   rgba(240,236,232,0.18);
+    --border-strong: rgba(192,32,42,0.30);
+    --border-cta:    rgba(192,32,42,0.50);
+    --accent-soft:   rgba(192,32,42,0.12);
+    --accent-softer: rgba(192,32,42,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    color: var(--white);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 36%, rgba(192,32,42,0.15), transparent 62%),
+      var(--bg);
+  }
+
+  /* ─── screen shell ─── */
+  .screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px 110px; /* 110px clears the fixed footer */
+    transition: opacity 0.42s ease, transform 0.42s ease;
+    overflow-y: auto;
+  }
+  .screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(16px);
+  }
+  .screen.slide-out {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-16px);
+  }
+
+  .panel {
+    width: 100%;
+    max-width: 460px;
+    text-align: center;
+  }
+
+  /* ─── wordmark ─── */
+  .wordmark {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(60px, 18vw, 100px);
+    letter-spacing: 14px;
+    line-height: 0.9;
+    color: var(--pure);
+    text-indent: 14px;
+    text-shadow: 0 2px 40px rgba(192,32,42,0.35);
+    margin-bottom: 10px;
+  }
+  .wordmark-sm {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(38px, 10vw, 56px);
+    letter-spacing: 10px;
+    line-height: 0.9;
+    color: var(--pure);
+    text-indent: 10px;
+    text-shadow: 0 2px 28px rgba(192,32,42,0.3);
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .kicker {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: 9px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--red-bright);
+    margin-bottom: 48px;
+  }
+  .kicker-sm {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: 8px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--red-bright);
+    margin-bottom: 28px;
+    text-align: center;
+  }
+
+  /* ─── divider ─── */
+  .rule {
+    width: 50px;
+    height: 1px;
+    margin: 0 auto 28px;
+    background: linear-gradient(90deg, transparent, var(--border-cta), transparent);
+  }
+
+  /* ─── CTA button ─── */
+  .cta {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: 1px solid var(--border-cta);
+    background: var(--accent-soft);
+    padding: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.18s ease, opacity 0.18s ease;
+    font-family: inherit;
+  }
+  .cta:hover { background: rgba(192,32,42,0.20); }
+  .cta:disabled { opacity: 0.55; cursor: default; }
+  .cta .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--red-bright);
+    box-shadow: 0 0 8px var(--red-bright);
+    flex-shrink: 0;
+  }
+  .cta .label-text {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--pure);
+  }
+
+  /* ─── form ─── */
+  form { text-align: left; }
+
+  .label {
+    display: block;
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--white-dim);
+    margin: 16px 0 8px;
+  }
+
+  .field {
+    width: 100%;
+    border: 1px solid var(--border-strong);
+    background: var(--bg-elevated);
+    border-radius: 8px;
+    padding: 14px;
+    color: var(--white);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .field::placeholder { color: var(--white-faint); }
+  .field:focus {
+    border-color: var(--border-cta);
+    box-shadow: 0 0 0 3px var(--accent-softer);
+  }
+
+  /* spinner */
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.25);
+    border-top-color: var(--pure);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .msg {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    margin-top: 14px;
+    min-height: 16px;
+  }
+  .msg.error { color: var(--red-bright); }
+
+  /* ─── success screen ─── */
+  .done-icon {
+    width: 52px; height: 52px;
+    border: 1px solid var(--border-cta);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 22px;
+    background: var(--accent-soft);
+  }
+  .done-icon::after {
+    content: '';
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--red-bright);
+    box-shadow: 0 0 14px var(--red-bright);
+  }
+  .done-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 9vw, 44px);
+    letter-spacing: 4px;
+    color: var(--pure);
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .done-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--white-mid);
+    text-align: center;
+    max-width: 340px;
+    margin: 0 auto 28px;
+  }
+  .position-badge {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid var(--border-cta);
+    background: var(--accent-soft);
+    border-radius: 10px;
+    padding: 18px 32px;
+    margin-bottom: 8px;
+  }
+  .position-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    letter-spacing: 4px;
+    line-height: 1;
+    color: var(--pure);
+    text-shadow: 0 0 24px rgba(224,64,80,0.5);
+  }
+  .position-label {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: 7.5px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red-bright);
+    margin-top: 4px;
+  }
+  .position-of {
+    font-family: 'Cinzel', serif;
+    font-size: 8px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--white-faint);
+    margin-top: 6px;
+  }
+
+  /* ─── footer ─── */
+  .footer {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    padding: 24px 24px 20px;
+    text-align: center;
+    pointer-events: none;
+    z-index: 10;
+    background: linear-gradient(to bottom, transparent, var(--bg) 40%);
+  }
+  .footer > * { pointer-events: auto; }
+  .footer-network {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: 7.5px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--white-dim);
+    margin-bottom: 10px;
+  }
+  .footer-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cinzel', serif;
+    font-size: 7px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .footer-links a {
+    color: var(--white-faint);
+    text-decoration: none;
+    transition: color 0.18s ease;
+  }
+  .footer-links a:hover { color: var(--red-bright); }
+  .footer-links .sep { margin: 0 10px; opacity: 0.35; }
+  .footer-copy {
+    font-family: 'Cinzel', serif;
+    font-size: 6.5px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--white-faint);
+    opacity: 0.55;
+  }
+
+  /* ─── privacy modal ─── */
+  .modal-backdrop {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(6,0,2,0.88);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 100;
+    align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 32px 28px;
+    max-width: 520px; width: 100%;
+    max-height: 80vh; overflow-y: auto;
+    position: relative;
+  }
+  .modal h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; letter-spacing: 4px;
+    color: var(--pure); margin-bottom: 18px;
+  }
+  .modal p, .modal li {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px; line-height: 1.65;
+    color: var(--white-mid); margin-bottom: 12px;
+  }
+  .modal ul { padding-left: 18px; margin-bottom: 12px; }
+  .modal strong { color: var(--white); font-weight: 600; }
+  .modal-close {
+    position: absolute; top: 14px; right: 18px;
+    background: none; border: none;
+    color: var(--white-mid);
+    font-family: 'Cinzel', serif; font-size: 18px;
+    cursor: pointer; line-height: 1;
+    transition: color 0.15s ease;
+  }
+  .modal-close:hover { color: var(--red-bright); }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 420px) {
+    .wordmark { letter-spacing: 10px; text-indent: 10px; }
+    .wordmark-sm { letter-spacing: 7px; text-indent: 7px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════
+       SCREEN 1 — Landing
+  ══════════════════════════════════════ -->
+  <div class="screen" id="screen-landing">
+    <div class="panel">
+      <h1 class="wordmark">ATRYX</h1>
+      <p class="kicker">&middot;&nbsp;Members Only&nbsp;&middot;</p>
+      <button class="cta" id="btn-join-landing">
+        <span class="dot"></span>
+        <span class="label-text">Join Waitlist</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SCREEN 2 — Form
+  ══════════════════════════════════════ -->
+  <div class="screen hidden" id="screen-form">
+    <div class="panel">
+      <h2 class="wordmark-sm">ATRYX</h2>
+      <p class="kicker-sm">&middot;&nbsp;Members Only&nbsp;&middot;</p>
+      <div class="rule"></div>
+
+      <form id="waitlist-form" novalidate>
+        <label class="label" for="name">Full Name</label>
+        <input class="field" id="name" type="text" name="name"
+               placeholder="Your name" autocomplete="name" autocapitalize="words" />
+
+        <label class="label" for="email">Email</label>
+        <input class="field" id="email" type="email" name="email"
+               placeholder="you@email.com" autocomplete="email" autocapitalize="off" />
+
+        <label class="label" for="phone">Phone</label>
+        <input class="field" id="phone" type="tel" name="phone"
+               placeholder="+34 600 000 000" autocomplete="tel" />
+
+        <button class="cta" id="submit-btn" type="submit" style="margin-top:26px;">
+          <span class="dot"></span>
+          <span class="label-text">Join Waitlist</span>
+        </button>
+
+        <p class="msg" id="msg" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SCREEN 3 — Success
+  ══════════════════════════════════════ -->
+  <div class="screen hidden" id="screen-done">
+    <div class="panel">
+      <div class="done-icon"></div>
+      <h2 class="done-title">You&rsquo;re on the list</h2>
+      <p class="done-sub">
+        You have successfully joined the waitlist.<br />
+        You will be notified when the app is live.
+      </p>
+
+      <div class="position-badge">
+        <div class="position-number" id="position-number">&mdash;</div>
+        <div class="position-label">Your spot</div>
+        <div class="position-of" id="position-of">of 500 places</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Fixed footer (always visible) ─── -->
+  <footer class="footer">
+    <p class="footer-network">&middot;&nbsp;Global Network&nbsp;&middot;</p>
+    <div class="footer-links">
+      <a href="#" id="privacy-link">Privacy Policy</a>
+      <span class="sep">|</span>
+      <a href="mailto:support@atryx.com">support@atryx.com</a>
+    </div>
+    <p class="footer-copy">&copy; 2025 ATRYX<span style="font-family:Georgia,serif;font-size:8px;">&trade;</span> &mdash; All rights reserved.</p>
+  </footer>
+
+  <!-- ─── Privacy modal ─── -->
+  <div class="modal-backdrop" id="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal">
+      <button class="modal-close" id="modal-close" aria-label="Close">&#x2715;</button>
+      <h2 id="modal-title">Privacy Policy</h2>
+      <p><strong>Last updated: June 2025</strong></p>
+      <p>ATRYX&trade; (&ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;) operates this waitlist page. This policy explains what data we collect, how we use it, and your rights.</p>
+      <p><strong>What we collect</strong></p>
+      <ul>
+        <li>Your full name, email address, and phone number as submitted on this form.</li>
+      </ul>
+      <p><strong>How we use it</strong></p>
+      <ul>
+        <li>To review your application and contact you if you are accepted into the ATRYX circle.</li>
+        <li>We do not sell, rent, or share your personal data with third parties for marketing purposes.</li>
+      </ul>
+      <p><strong>Data storage</strong></p>
+      <p>Your data is stored securely via Supabase. It is retained for up to 24 months or until you request deletion.</p>
+      <p><strong>Your rights</strong></p>
+      <p>You may request access to, correction of, or deletion of your data at any time by emailing <a href="mailto:support@atryx.com" style="color:var(--red-bright)">support@atryx.com</a>.</p>
+      <p><strong>Contact</strong></p>
+      <p>Questions? Email <a href="mailto:support@atryx.com" style="color:var(--red-bright)">support@atryx.com</a>.</p>
+    </div>
+  </div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   CONFIG
+═══════════════════════════════════════════════════════════════════ */
+const SUPABASE_URL = 'https://sqeymvrnwnefqiojofhh.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_6-dJkjzJrHdJ3sJghRdSCA_I5DpeQLs';
+
+// Displayed position = real DB count + POSITION_OFFSET
+// Set to 249 so the very first signup shows as #250.
+const POSITION_OFFSET = 249;
+const POSITION_CAP    = 500;
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/* ═══════════════════════════════════════════════════════════════════
+   SCREEN TRANSITIONS
+═══════════════════════════════════════════════════════════════════ */
+function goTo(nextId, currentId) {
+  const current = document.getElementById(currentId);
+  const next    = document.getElementById(nextId);
+
+  current.classList.add('slide-out');
+  setTimeout(function () {
+    current.classList.add('hidden');
+    current.classList.remove('slide-out');
+    next.classList.remove('hidden');
+    // Force reflow so CSS transition fires
+    next.getBoundingClientRect();
+    next.style.opacity = '0';
+    next.style.transform = 'translateY(16px)';
+    requestAnimationFrame(function () {
+      next.style.transition = 'opacity 0.42s ease, transform 0.42s ease';
+      next.style.opacity = '';
+      next.style.transform = '';
+    });
+  }, 380);
+}
+
+document.getElementById('btn-join-landing').addEventListener('click', function () {
+  goTo('screen-form', 'screen-landing');
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+   SUPABASE HELPERS
+═══════════════════════════════════════════════════════════════════ */
+async function insertWaitlist(name, email, phone) {
+  const res = await fetch(SUPABASE_URL + '/rest/v1/waitlist', {
+    method: 'POST',
+    headers: {
+      'apikey':        SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type':  'application/json',
+      'Prefer':        'return=minimal',
+    },
+    body: JSON.stringify({
+      name:  name.trim(),
+      email: email.trim().toLowerCase(),
+      phone: phone.trim(),
+    }),
+  });
+  if (!res.ok) {
+    let detail = '';
+    try { detail = (await res.json()).message || ''; } catch (e) {}
+    throw new Error(detail || 'Request failed (' + res.status + ')');
+  }
+}
+
+async function getWaitlistCount() {
+  try {
+    const res = await fetch(SUPABASE_URL + '/rest/v1/waitlist?select=id', {
+      method: 'GET',
+      headers: {
+        'apikey':        SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Prefer':        'count=exact',
+        'Range':         '0-0',
+      },
+    });
+    // Content-Range header looks like "0-0/42"
+    const range = res.headers.get('Content-Range') || '';
+    const parts = range.split('/');
+    if (parts.length === 2) {
+      const n = parseInt(parts[1], 10);
+      if (!isNaN(n)) return n;
+    }
+  } catch (e) {}
+  return null; // fallback: count unknown
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   FORM SUBMIT
+═══════════════════════════════════════════════════════════════════ */
+const form      = document.getElementById('waitlist-form');
+const submitBtn = document.getElementById('submit-btn');
+const msg       = document.getElementById('msg');
+
+function showError(text) {
+  msg.textContent = text;
+  msg.className = 'msg error';
+}
+
+form.addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const name  = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
+
+  if (!name.trim())
+    return showError('Please enter your name.');
+  if (!EMAIL_RE.test(email.trim()))
+    return showError('Please enter a valid email address.');
+  if (phone.replace(/\D/g, '').length < 6)
+    return showError('Please enter a valid phone number.');
+
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span class="spinner"></span>';
+  msg.textContent = '';
+
+  try {
+    await insertWaitlist(name, email, phone);
+
+    // Fetch the live count (includes the row we just inserted)
+    const count = await getWaitlistCount();
+
+    // Calculate displayed position
+    let posNum;
+    if (count !== null) {
+      posNum = Math.min(count + POSITION_OFFSET, POSITION_CAP);
+    } else {
+      // Fallback: random in plausible range
+      posNum = POSITION_OFFSET + Math.floor(Math.random() * 10) + 1;
+    }
+
+    document.getElementById('position-number').textContent = '#' + posNum;
+    document.getElementById('position-of').textContent =
+      'of ' + POSITION_CAP + ' founding spots';
+
+    goTo('screen-done', 'screen-form');
+
+  } catch (err) {
+    showError(err.message || 'Something went wrong. Please try again.');
+    submitBtn.disabled = false;
+    submitBtn.innerHTML =
+      '<span class="dot"></span><span class="label-text">Join Waitlist</span>';
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+   PRIVACY MODAL
+═══════════════════════════════════════════════════════════════════ */
+(function () {
+  const modal    = document.getElementById('privacy-modal');
+  const openBtn  = document.getElementById('privacy-link');
+  const closeBtn = document.getElementById('modal-close');
+
+  openBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+  function closeModal() {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', function (e) {
+    if (e.target === modal) closeModal();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeModal();
+  });
+})();
+</script>
+</body>
+</html>
