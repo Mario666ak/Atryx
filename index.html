@@ -209,19 +209,14 @@
 
   /* ─── success screen ─── */
   .done-icon {
-    width: 52px; height: 52px;
+    width: 56px; height: 56px;
     border: 1px solid var(--border-cta);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     margin: 0 auto 22px;
     background: var(--accent-soft);
-  }
-  .done-icon::after {
-    content: '';
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    background: var(--red-bright);
-    box-shadow: 0 0 14px var(--red-bright);
+    font-size: 22px;
+    color: var(--red-bright);
   }
   .done-title {
     font-family: 'Bebas Neue', sans-serif;
@@ -427,7 +422,7 @@
   ══════════════════════════════════════ -->
   <div class="screen hidden" id="screen-done">
     <div class="panel">
-      <div class="done-icon"></div>
+      <div class="done-icon">&#10003;</div>
       <h2 class="done-title">You&rsquo;re on the list</h2>
       <p class="done-sub">
         You have successfully joined the waitlist.<br />
@@ -539,9 +534,21 @@ async function insertWaitlist(name, email, phone) {
     }),
   });
   if (!res.ok) {
-    let detail = '';
-    try { detail = (await res.json()).message || ''; } catch (e) {}
-    throw new Error(detail || 'Request failed (' + res.status + ')');
+    let body = {};
+    try { body = await res.json(); } catch (e) {}
+    const msg = (body.message || body.error || '').toLowerCase();
+    const detail = (body.details || body.detail || '').toLowerCase();
+    // Catch ALL forms of unique constraint violation
+    const isDuplicate =
+      res.status === 409 ||
+      body.code === '23505' ||
+      msg.includes('duplicate') ||
+      msg.includes('unique') ||
+      msg.includes('already exists') ||
+      detail.includes('already exists') ||
+      detail.includes('duplicate');
+    if (isDuplicate) throw new Error('DUPLICATE');
+    throw new Error(body.message || 'Something went wrong. Please try again.');
   }
 }
 
@@ -616,7 +623,11 @@ form.addEventListener('submit', async function (e) {
     goTo('screen-done', 'screen-form');
 
   } catch (err) {
-    showError(err.message || 'Something went wrong. Please try again.');
+    if (err.message === 'DUPLICATE') {
+      showError('You\'re already on the waitlist — we\'ll be in touch.');
+    } else {
+      showError(err.message || 'Something went wrong. Please try again.');
+    }
     submitBtn.disabled = false;
     submitBtn.innerHTML =
       '<span class="dot"></span><span class="label-text">Join Waitlist</span>';
